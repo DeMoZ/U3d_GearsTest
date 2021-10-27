@@ -12,7 +12,7 @@
 		"fovDuration" : 0.3
 	},
 	"settings" : {
-		"playersCount" : 2,
+		"playersCount" : 5,
 		"buffCountMin" : 0,
 		"buffCountMax" : 5,
 		"allowDuplicateBuffs" : false
