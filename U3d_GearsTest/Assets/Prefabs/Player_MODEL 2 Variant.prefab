@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1000011813424072, guid: 27d5d38a58fb54240ae92d1d0ad28430, type: 3}
       propertyPath: m_Name
-      value: Player_MODEL 2
+      value: Player_MODEL 2 Variant
       objectReference: {fileID: 0}
     - target: {fileID: 4000014260285384, guid: 27d5d38a58fb54240ae92d1d0ad28430, type: 3}
       propertyPath: m_LocalPosition.x
@@ -47,5 +47,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 8480184659164375580, guid: 27d5d38a58fb54240ae92d1d0ad28430,
+        type: 3}
+      propertyPath: _name
+      value: Android
+      objectReference: {fileID: 0}
+    - target: {fileID: 8480184659164375580, guid: 27d5d38a58fb54240ae92d1d0ad28430,
+        type: 3}
+      propertyPath: _playerType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8480184659164375580, guid: 27d5d38a58fb54240ae92d1d0ad28430,
+        type: 3}
+      propertyPath: _animator
+      value: 
+      objectReference: {fileID: 2007496233072527425}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27d5d38a58fb54240ae92d1d0ad28430, type: 3}
+--- !u!95 &2007496233072527425 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 95000013452371578, guid: 27d5d38a58fb54240ae92d1d0ad28430,
+    type: 3}
+  m_PrefabInstance: {fileID: 1913340663987269179}
+  m_PrefabAsset: {fileID: 0}

@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1000011813424072, guid: 27d5d38a58fb54240ae92d1d0ad28430, type: 3}
       propertyPath: m_Name
-      value: Player_MODEL 1
+      value: Player_MODEL 1 Variant
       objectReference: {fileID: 0}
     - target: {fileID: 4000014260285384, guid: 27d5d38a58fb54240ae92d1d0ad28430, type: 3}
       propertyPath: m_LocalPosition.x
@@ -48,5 +48,21 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 54ae704bb7a8d4a40b0b46365a027f61, type: 2}
+    - target: {fileID: 8480184659164375580, guid: 27d5d38a58fb54240ae92d1d0ad28430,
+        type: 3}
+      propertyPath: _name
+      value: Cop
+      objectReference: {fileID: 0}
+    - target: {fileID: 8480184659164375580, guid: 27d5d38a58fb54240ae92d1d0ad28430,
+        type: 3}
+      propertyPath: _animator
+      value: 
+      objectReference: {fileID: 5849478836480689700}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27d5d38a58fb54240ae92d1d0ad28430, type: 3}
+--- !u!95 &5849478836480689700 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 95000013452371578, guid: 27d5d38a58fb54240ae92d1d0ad28430,
+    type: 3}
+  m_PrefabInstance: {fileID: 5799514821663957086}
+  m_PrefabAsset: {fileID: 0}
