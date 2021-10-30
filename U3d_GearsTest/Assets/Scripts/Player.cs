@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using UnityEngine;
@@ -36,7 +34,7 @@ public class Player : MonoBehaviour
         // _animator.SetFloat(Health, _health);
     }
 
-    
+
     public void ApplyBuffs(Stat[] stats, Buff[] buffs)
     {
         var playerStats = Copy(stats.ToList()).ToArray();
@@ -50,7 +48,7 @@ public class Player : MonoBehaviour
         else
         {
             var buffStats = new List<BuffStat>();
-            
+
             foreach (var buff in Buffs)
             {
                 if (buff.stats != null)
@@ -67,7 +65,7 @@ public class Player : MonoBehaviour
             Stats = resultStats.ToArray();
         }
 
-        _health = Stats.First(s => s.title == "жизнь").value;
+        _health = Stats.First(s => s.title == Constants.Hp).value;
         _animator.SetInteger(Health, (int)_health);
     }
 

@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class PanelsController : MonoBehaviour
 {
-    private const string RemoveBuffs = "Убрать бафы";
-    private const string AddBuffs = "Добавить бафы";
-
     [SerializeField] private StatView _statPrefab = default;
     [SerializeField] private PlayerPanelHierarchy[] _panels = default;
     [SerializeField] private Button[] _buffsButtons = default;
@@ -69,7 +66,7 @@ public class PanelsController : MonoBehaviour
         foreach (var stat in player.Stats)
         {
             var statView = Instantiate(_statPrefab, parent);
-            statView.Init(stat.value.ToString(), Resources.Load<Sprite>($"icons/{stat.icon}"));
+            statView.Init(stat.value.ToString(), Resources.Load<Sprite>($"{Constants.IconsPath}{stat.icon}"));
         }
     }
 
@@ -83,7 +80,7 @@ public class PanelsController : MonoBehaviour
             foreach (var buff in player.Buffs)
             {
                 var buffView = Instantiate(_statPrefab, parent);
-                buffView.Init(buff.title, Resources.Load<Sprite>($"icons/{buff.icon}"));
+                buffView.Init(buff.title, Resources.Load<Sprite>($"{Constants.IconsPath}{buff.icon}"));
             }
         }
     }
@@ -91,6 +88,8 @@ public class PanelsController : MonoBehaviour
     private void SetBuffButtonText(int buttonIndex, bool hasBuffs)
     {
         if (buttonIndex < _buffsButtons.Length)
-            _buffsButtons[buttonIndex].GetComponentInChildren<Text>().text = hasBuffs ? RemoveBuffs : AddBuffs;
+            _buffsButtons[buttonIndex].GetComponentInChildren<Text>().text = hasBuffs ? 
+                Constants.RemoveBuffs:
+                Constants.AddBuffs;
     }
 }

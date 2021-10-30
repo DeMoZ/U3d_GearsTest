@@ -64,8 +64,16 @@ public class PlayersController : MonoBehaviour
             player.AttackAnimation();
 
         var damagedGroup = _players.Where(p => p.PlayerType != _players[pIndex].PlayerType);
+        
+        foreach (var player in damagedGroup)
+            player.Hit(_players[pIndex].Stats);
     }
 
+    private void CalculateHit(Stat[] hunter, Stat[] victim )
+    {
+        victim.FirstOrDefault(s => s.title == Constants.Deffence);
+    }
+    
     private Player NextPlayer(int count) =>
         count < 2 ? _playersPrefabs[count] : _playersPrefabs[Random.Range(0, _playersPrefabs.Length)];
 

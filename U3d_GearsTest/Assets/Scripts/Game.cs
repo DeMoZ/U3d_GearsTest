@@ -34,7 +34,7 @@ public class Game : MonoBehaviour
 
     private Data LoadGameData()
     {
-        var data = JsonUtility.FromJson<Data>(Resources.Load("data").ToString());
+        var data = JsonUtility.FromJson<Data>(Resources.Load(Constants.DataFile).ToString());
         data.settings.playersCount = data.settings.playersCount < 2 ? 2 : data.settings.playersCount;
         // bool anyIssue = true_if_any_issue_with_datafile // such as wrong ranges or no specific or invalid data
         // if (anyIssue) return null;
