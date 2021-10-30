@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class Data
@@ -31,16 +32,17 @@ public class GameModel
     public int buffCountMin;
     public int buffCountMax;
     public bool allowDuplicateBuffs;
-
 }
 
 [Serializable]
-public class Stat
+public class Stat : ICanBeCopied<Stat>
 {
     public int id;
     public string title;
     public string icon;
     public float value;
+
+    public Stat Copy() => new Stat { id = this.id, title = this.title, icon = this.icon, value = this.value };
 }
 
 [Serializable]
@@ -51,10 +53,17 @@ public class BuffStat
 }
 
 [Serializable]
-public class Buff
+public class Buff : ICanBeCopied<Buff>
 {
     public string icon;
     public int id;
     public string title;
     public BuffStat[] stats;
+
+    public Buff Copy() => new Buff { icon = this.icon, id = this.id, title = this.title, stats = this.stats };
+}
+
+public interface ICanBeCopied<T>
+{
+    T Copy();
 }

@@ -6,7 +6,7 @@ public class PanelsController : MonoBehaviour
 {
     private const string RemoveBuffs = "Убрать бафы";
     private const string AddBuffs = "Добавить бафы";
-    
+
     [SerializeField] private StatView _statPrefab = default;
     [SerializeField] private PlayerPanelHierarchy[] _panels = default;
     [SerializeField] private Button[] _buffsButtons = default;
@@ -39,7 +39,7 @@ public class PanelsController : MonoBehaviour
     public void SubscribeAttack(Action<int> attackCallback) =>
         OnAttack += attackCallback;
 
-    public void SubscribeBuffs(Action<int> buffCallback) => 
+    public void SubscribeBuffs(Action<int> buffCallback) =>
         OnBuff += buffCallback;
 
     public void Init(Player[] players)
@@ -51,8 +51,9 @@ public class PanelsController : MonoBehaviour
             if (i < players.Length)
             {
                 CleanPanel(i);
-                InstantiateStats(players, i);
-                InstantiateBuffs(players, i);
+                InstantiateStats(players[i], _panels[i].statsPanel);
+                InstantiateBuffs(players[i], _panels[i].statsPanel);
+                SetBuffButtonText(i, players[i].Buffs != null && players[i].Buffs.Length > 0);
             }
         }
     }
@@ -63,29 +64,27 @@ public class PanelsController : MonoBehaviour
             Destroy(child.gameObject);
     }
 
-    private void InstantiateStats(Player[] players, int i)
+    private void InstantiateStats(Player player, Transform parent)
     {
-        foreach (var stat in players[i].Stats)
+        foreach (var stat in player.Stats)
         {
-            var statView = Instantiate(_statPrefab, _panels[i].statsPanel);
-            statView.Init(stat.title, Resources.Load<Sprite>($"icons/{stat.icon}"));
+            var statView = Instantiate(_statPrefab, parent);
+            statView.Init(stat.value.ToString(), Resources.Load<Sprite>($"icons/{stat.icon}"));
         }
     }
 
-    private void InstantiateBuffs(Player[] players, int i)
+    private void InstantiateBuffs(Player player, Transform parent)
     {
-        if (players[i].Buffs != null)
+        // if (player.Buffs != null)
+        //     Debug.Log($"buffs for player {player.Buffs.Length}");
+        
+        if (player.Buffs != null)
         {
-            SetBuffButtonText(i, true);
-            foreach (var buff in players[i].Buffs)
+            foreach (var buff in player.Buffs)
             {
-                var buffView = Instantiate(_statPrefab, _panels[i].statsPanel);
+                var buffView = Instantiate(_statPrefab, parent);
                 buffView.Init(buff.title, Resources.Load<Sprite>($"icons/{buff.icon}"));
             }
-        }
-        else
-        {
-            SetBuffButtonText(i, false);
         }
     }
 
