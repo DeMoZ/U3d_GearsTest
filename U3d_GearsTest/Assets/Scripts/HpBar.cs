@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEditor.Experimental.UIElements;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class HpBar : MonoBehaviour
