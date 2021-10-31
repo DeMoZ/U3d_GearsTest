@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Unity.Collections;
 using UnityEngine;
 
 public enum PlayerType
@@ -16,12 +15,14 @@ public class Player : MonoBehaviour
 
     [SerializeField] private PlayerType _playerType = PlayerType.Cop;
     [SerializeField] private Animator _animator = default;
-
+    [SerializeField] private Transform _hpAnchor = default;
 
     public PlayerType PlayerType => _playerType;
+    public Transform HpAnchor => _hpAnchor;
     public Stat[] Stats { get; private set; }
     public Buff[] Buffs { get; private set; }
     public int Hp { get; private set; }
+    public int MaxHp { get; private set; }
 
     public void AttackAnimation()
     {
@@ -32,7 +33,7 @@ public class Player : MonoBehaviour
     public void Hit(int damage)
     {
         var stat = Stats.First(s => s.title.Equals(Constants.Hp));
-        Hp -= damage;
+        Hp += damage;
         Hp = (int)Mathf.Clamp(Hp, 0, float.MaxValue);
         stat.value = Hp;
         _animator.SetInteger(Health, Hp);
@@ -70,6 +71,7 @@ public class Player : MonoBehaviour
         }
 
         Hp = (int)Stats.First(s => s.title == Constants.Hp).value;
+        MaxHp = Hp;
         _animator.SetInteger(Health, (int)Hp);
     }
 

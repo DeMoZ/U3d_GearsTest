@@ -20,9 +20,14 @@ public class Game : MonoBehaviour
         _panelsController.Init(_playersController.Players);
     }
 
-    private void OnHit()
+    private void OnHit(HitPair victim, HitPair hunter)
     {
         _panelsController.Init(_playersController.Players);
+
+        _panelsController.ShowDamage(victim.Index, victim.Value);
+
+        if (hunter != null)
+            _panelsController.ShowDamage(hunter.Index,hunter.Value);
     }
 
     private void SetBuffForPlayerType(int pIndex)

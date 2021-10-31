@@ -6,11 +6,11 @@ using UnityEngine.UI;
 public class PanelsController : MonoBehaviour
 {
     [SerializeField] private StatView _statPrefab = default;
-    [SerializeField] private Image _hpBarPrefab = default;
+    [SerializeField] private HpBar _hpBarPrefab = default;
     [SerializeField] private PlayerPanelHierarchy[] _panels = default;
     [SerializeField] private Button[] _buffsButtons = default;
 
-    private Image[] _hpBars = new Image[] { };
+    private HpBar[] _hpBars = new HpBar[] { };
     private event Action<int> OnAttack;
     private event Action<int> OnBuff;
 
@@ -44,26 +44,10 @@ public class PanelsController : MonoBehaviour
     public void Init(Player[] players)
     {
         CleanPanels();
-        // if (_hpBars.Length != players.Length)
-        // {
-        //     foreach (var hpBar in _hpBars)
-        //     {
-        //         Destroy(hpBar.gameObject);
-        //     }
-// 
-        //     _hpBars = new Image[players.Length];
-// 
-        //     for (var i = 0; i < players.Length; i++)
-        //     {
-        //         _hpBars[i] = Instantiate(_hpBarPrefab, transform.) players[i];
-        //     }
-        // }
+        CheckInstallHpBars(players);
+        SetHpBarsValue(players);
 
-        for (var i = 0; i < players.Length; i++)
-        {
-            InstantiateHp(players[i].Stats.First(s => s.title.Equals(Constants.Hp)),
-                players[i].PlayerType == players[0].PlayerType ? _panels[0].statsPanel : _panels[1].statsPanel);
-        }
+        InstallHpStat(players);
 
         // in case that all the players of the group has the same buffs
         for (var i = 0; i < _panels.Length; i++)
@@ -73,6 +57,40 @@ public class PanelsController : MonoBehaviour
                 InstantiateStats(players[i], _panels[i].statsPanel);
                 InstantiateBuffs(players[i], _panels[i].statsPanel);
                 SetBuffButtonText(i, players[i].Buffs != null && players[i].Buffs.Length > 0);
+            }
+        }
+    }
+
+    public void SetHpBarsValue(Player[] players)
+    {
+        for (var i = 0; i < players.Length; i++) 
+            _hpBars[i].SetHp((float)players[i].Hp / players[i].MaxHp);
+    }
+
+    private void InstallHpStat(Player[] players)
+    {
+        for (var i = 0; i < players.Length; i++)
+        {
+            InstantiateHp(players[i].Stats.First(s => s.title.Equals(Constants.Hp)),
+                players[i].PlayerType == players[0].PlayerType ? _panels[0].statsPanel : _panels[1].statsPanel);
+        }
+    }
+
+    private void CheckInstallHpBars(Player[] players)
+    {
+        if (_hpBars.Length != players.Length)
+        {
+            foreach (var hpBar in _hpBars)
+            {
+                Destroy(hpBar.gameObject);
+            }
+
+            _hpBars = new HpBar[players.Length];
+
+            for (var i = 0; i < players.Length; i++)
+            {
+                _hpBars[i] = Instantiate(_hpBarPrefab, transform);
+                _hpBars[i].Init(players[i].HpAnchor);
             }
         }
     }
@@ -121,5 +139,10 @@ public class PanelsController : MonoBehaviour
         if (buttonIndex < _buffsButtons.Length)
             _buffsButtons[buttonIndex].GetComponentInChildren<Text>().text =
                 hasBuffs ? Constants.RemoveBuffs : Constants.AddBuffs;
+    }
+
+    public void ShowDamage(int index, int value)
+    {
+        _hpBars[index].ShowDamage(value);
     }
 }

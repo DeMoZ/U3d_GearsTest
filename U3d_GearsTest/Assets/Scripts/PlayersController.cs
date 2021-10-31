@@ -7,18 +7,19 @@ using Random = UnityEngine.Random;
 public class PlayersController : MonoBehaviour
 {
     [SerializeField] private Player[] _playersPrefabs = default;
-    public Player[] _players;
+    private Player[] _players;
     public Player[] Players => _players;
 
-    public Stat[] _stats;
-    public Buff[] _buffs;
-    public int _minBuffs;
-    public int _maxBuffs;
-    public bool _allowDublicateBuffs;
+    private Stat[] _stats;
+    private Buff[] _buffs;
+    private int _minBuffs;
+    private int _maxBuffs;
+    private bool _allowDublicateBuffs;
     private bool _isAttacking;
-    private event Action OnHit;
+    private event Action<HitPair, HitPair> OnHit;
 
-    public void Init(Stat[] stats, Buff[] buffs, int minBuffs, int maxBuffs, bool allowDublicate, Action hitCallback)
+    public void Init(Stat[] stats, Buff[] buffs, int minBuffs, int maxBuffs, bool allowDublicate,
+        Action<HitPair, HitPair> hitCallback)
     {
         _stats = stats;
         _buffs = buffs;
@@ -102,12 +103,19 @@ public class PlayersController : MonoBehaviour
         var power = hunter.Stats.First(s => s.title == Constants.Damage).value;
         var sucking = hunter.Stats.First(s => s.title == Constants.Sucking).value;
 
-        var damage = power * (100 - deff) / 100;
-        var sip = damage * sucking / 100;
+        var damage = -1 * (int)(power * (100 - deff) / 100);
+        var sip = (int)(damage * sucking / 100);
 
-        victim.Hit((int)damage);
-        hunter.Hit((int)-sip);
-        OnHit?.Invoke();
+        victim.Hit(damage);
+        hunter.Hit(sip);
+
+        var v = new HitPair { Index = Array.IndexOf(_players, victim), Value = damage };
+
+        HitPair h = null;
+        if(sip!=0)
+            h = new HitPair { Index = Array.IndexOf(_players, hunter), Value = -sip };
+
+        OnHit?.Invoke(v, h);
     }
 
     private Player NextPlayer(int count) =>
@@ -132,4 +140,10 @@ public class PlayersController : MonoBehaviour
             return buffs;
         }
     }
+}
+
+public class HitPair
+{
+    public int Index;
+    public int Value;
 }
