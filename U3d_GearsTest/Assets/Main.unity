@@ -387,12 +387,6 @@ MonoBehaviour:
   _playersPrefabs:
   - {fileID: 2725714634187278914, guid: 0025bb9ccb00cec42a946522bed8134e, type: 3}
   - {fileID: 8008005101533840423, guid: 5d9145bef507bf44f866b6b0ba0c0f22, type: 3}
-  _players: []
-  _stats: []
-  _buffs: []
-  _minBuffs: 0
-  _maxBuffs: 0
-  _allowDublicateBuffs: 0
 --- !u!4 &426230628
 Transform:
   m_ObjectHideFlags: 0
@@ -935,6 +929,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _statPrefab: {fileID: 114698881796900796, guid: 77a89dfebc586d241992ad32394d6699,
+    type: 3}
+  _hpBarPrefab: {fileID: 114329757498314538, guid: 62c4624c182bca94e96863e926c37a5b,
     type: 3}
   _panels:
   - {fileID: 1657153667}
@@ -1508,6 +1504,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2725714634187278914, guid: 0025bb9ccb00cec42a946522bed8134e,
+        type: 3}
+      propertyPath: _health
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5796750633812889494, guid: 0025bb9ccb00cec42a946522bed8134e,
         type: 3}
       propertyPath: m_LocalPosition.x
