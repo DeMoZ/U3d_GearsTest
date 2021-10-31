@@ -14,24 +14,28 @@ public class Player : MonoBehaviour
     private static readonly int Attack = Animator.StringToHash("Attack");
     private static readonly int Health = Animator.StringToHash("Health");
 
-    [SerializeField, ReadOnly] private float _health;
     [SerializeField] private PlayerType _playerType = PlayerType.Cop;
     [SerializeField] private Animator _animator = default;
+
+
     public PlayerType PlayerType => _playerType;
-    public Stat[] Stats; //{ get; private set; }
-    public Buff[] Buffs; //{ get; private set; }
+    public Stat[] Stats { get; private set; }
+    public Buff[] Buffs { get; private set; }
+    public int Hp { get; private set; }
 
     public void AttackAnimation()
     {
-        if (_health >= 1)
+        if (Hp >= 1)
             _animator.SetTrigger(Attack);
     }
 
-    public void Hit(Stat[] inStats)
+    public void Hit(int damage)
     {
-        // todo calculate value based on my stats and incoming stats
-        // _health += value;
-        // _animator.SetFloat(Health, _health);
+        var stat = Stats.First(s => s.title.Equals(Constants.Hp));
+        Hp -= damage;
+        Hp = (int)Mathf.Clamp(Hp, 0, float.MaxValue);
+        stat.value = Hp;
+        _animator.SetInteger(Health, Hp);
     }
 
 
@@ -65,8 +69,8 @@ public class Player : MonoBehaviour
             Stats = resultStats.ToArray();
         }
 
-        _health = Stats.First(s => s.title == Constants.Hp).value;
-        _animator.SetInteger(Health, (int)_health);
+        Hp = (int)Stats.First(s => s.title == Constants.Hp).value;
+        _animator.SetInteger(Health, (int)Hp);
     }
 
     private List<T> Copy<T>(List<T> stats) where T : ICanBeCopied<T>

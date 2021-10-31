@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PlayersController : MonoBehaviour
 {
@@ -12,15 +15,21 @@ public class PlayersController : MonoBehaviour
     public int _minBuffs;
     public int _maxBuffs;
     public bool _allowDublicateBuffs;
+    private bool _isAttacking;
+    private event Action OnHit;
 
-    public void Init(Stat[] stats, Buff[] buffs, int minBuffs, int maxBuffs, bool allowDublicate)
+    public void Init(Stat[] stats, Buff[] buffs, int minBuffs, int maxBuffs, bool allowDublicate, Action hitCallback)
     {
         _stats = stats;
         _buffs = buffs;
         _minBuffs = minBuffs;
         _maxBuffs = maxBuffs;
         _allowDublicateBuffs = allowDublicate;
+        OnHit += hitCallback;
     }
+
+    private void OnDestroy() =>
+        OnHit = null;
 
     public void MakePlayers(int amount)
     {
@@ -49,31 +58,58 @@ public class PlayersController : MonoBehaviour
 
         Buff[] buffs = null;
 
-        if (_players[pIndex].Buffs == null || _players[pIndex].Buffs.Length < 1) 
+        if (_players[pIndex].Buffs == null || _players[pIndex].Buffs.Length < 1)
             buffs = RandomBuffs();
 
         foreach (var player in group)
             player.ApplyBuffs(_stats, buffs);
     }
 
-    public void PlayerAttack(int pIndex)
+    public void Attack(int pIndex)
     {
-        var attackGroup = _players.Where(p => p.PlayerType == _players[pIndex].PlayerType);
+        if (_isAttacking) return;
 
-        foreach (var player in attackGroup)
-            player.AttackAnimation();
+        _isAttacking = true;
+        Invoke(nameof(SetIdle), 1);
 
-        var damagedGroup = _players.Where(p => p.PlayerType != _players[pIndex].PlayerType);
-        
-        foreach (var player in damagedGroup)
-            player.Hit(_players[pIndex].Stats);
+        var hunters = _players.Where(p => p.PlayerType == _players[pIndex].PlayerType).ToList();
+        var victims = _players.Where(p => p.PlayerType != _players[pIndex].PlayerType && p.Hp > 0).ToList();
+
+        if (victims.Count < 1) return;
+
+        foreach (var hunter in hunters)
+            StartCoroutine(IEAttack(hunter, victims[RandomVictim(victims.Count())]));
     }
 
-    private void CalculateHit(Stat[] hunter, Stat[] victim )
+    private int RandomVictim(int randomMax) =>
+        Random.Range(0, randomMax);
+
+    private IEnumerator IEAttack(Player hunter, Player victim)
     {
-        victim.FirstOrDefault(s => s.title == Constants.Deffence);
+        yield return new WaitForSeconds(Random.Range(0f, 0.5f));
+        hunter.AttackAnimation();
+        CalculateHit(hunter, victim);
     }
-    
+
+    private void SetIdle() =>
+        _isAttacking = false;
+
+    private void CalculateHit(Player hunter, Player victim)
+    {
+        var hp = victim.Stats.First(s => s.title == Constants.Hp);
+        var deff = victim.Stats.First(s => s.title == Constants.Deffence).value;
+
+        var power = hunter.Stats.First(s => s.title == Constants.Damage).value;
+        var sucking = hunter.Stats.First(s => s.title == Constants.Sucking).value;
+
+        var damage = power * (100 - deff) / 100;
+        var sip = damage * sucking / 100;
+
+        victim.Hit((int)damage);
+        hunter.Hit((int)-sip);
+        OnHit?.Invoke();
+    }
+
     private Player NextPlayer(int count) =>
         count < 2 ? _playersPrefabs[count] : _playersPrefabs[Random.Range(0, _playersPrefabs.Length)];
 

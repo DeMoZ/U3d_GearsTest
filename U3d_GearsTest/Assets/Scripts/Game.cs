@@ -12,11 +12,16 @@ public class Game : MonoBehaviour
         //if (data.Data == null){ brake scenario; return; }
 
         _playersController.Init(data.stats, data.buffs,
-            data.settings.buffCountMin, data.settings.buffCountMax, data.settings.allowDuplicateBuffs);
+            data.settings.buffCountMin, data.settings.buffCountMax, data.settings.allowDuplicateBuffs, OnHit);
         _playersController.MakePlayers(data.settings.playersCount);
 
-        _panelsController.SubscribeAttack(_playersController.PlayerAttack);
+        _panelsController.SubscribeAttack(_playersController.Attack);
         _panelsController.SubscribeBuffs(SetBuffForPlayerType);
+        _panelsController.Init(_playersController.Players);
+    }
+
+    private void OnHit()
+    {
         _panelsController.Init(_playersController.Players);
     }
 
